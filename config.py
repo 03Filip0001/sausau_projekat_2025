@@ -12,3 +12,10 @@ DEFAILT_MODEL_NAME = "Gradient Boosting"
 
 DEFAULT_DATA_PATH = "data/telco_data.csv"
 DEFAULT_PARAMS_PATH = "data/params.json"
+
+# Models used for this project
+MODEL_NAMES = {
+	"Logistic Regression": LogisticRegression,
+	"Forest Classifier": RandomForestClassifier,
+	"Gradient Boosting": GradientBoostingClassifier
+}
