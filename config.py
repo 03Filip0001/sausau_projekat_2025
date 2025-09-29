@@ -30,3 +30,22 @@ MODEL_NAMES = {
 	"Forest Classifier": RandomForestClassifier,
 	"Gradient Boosting": GradientBoostingClassifier
 }
+DEFAULT_PARAMS_LR = {
+	"C": [0.01, 0.1, 1, 10, 15],
+	"solver": ["lbfgs", "liblinear"],
+	"max_iter": [100, 200, 500, 1000, 2000, 2500],
+	"class_weight": ["balanced"]
+}
+
+DEFAULT_PARAMS_RF = {
+	"n_estimators": [50, 75, 125, 150, 200, 300],
+	"max_depth": [None, 5],
+	"min_samples_split": [2, 5, 10, 20],
+	"class_weight": ["balanced"]
+}
+
+DEFAULT_PARAMS_GB = {
+	"n_estimators": [50, 75, 125, 150, 200, 300],
+	"learning_rate": [0.01, 0.1, 0.2],
+	"max_depth": [3, 5, 10]
+}
