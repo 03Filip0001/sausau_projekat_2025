@@ -35,4 +35,7 @@ venv:
 	$(CREATE_VENV)
 
 run: requirements
-	$(PYTHON) main.py
+	$(PYTHON) main.py $(ARGS)
+
+models:
+	$(MAKE) run ARGS=train

@@ -1,61 +1,52 @@
-from src.utils import _print_msg
-
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.model_selection import RandomizedSearchCV
 
-configuration_logistic = {
-	"max_iter": 1000,
-	"solver": "lbfgs",
-	"class_weight": "balanced",
-	"random_state": 0
+from src.utils import _print_msg
+
+param_lr = {
+	"C": [0.01, 0.1, 1, 10],
+	"solver": ["lbfgs", "liblinear"],
+	"max_iter": [100, 200, 500, 1000, 2000],
+	"class_weight": ["balanced"]
 }
 
-configuration_forest = {
-	"n_estimators": 100,
-	"class_weight": "balanced",
-	"random_state": 0
+param_rf = {
+	"n_estimators": [50, 75, 125, 200],
+	"max_depth": [None, 5],
+	"min_samples_split": [2, 5, 10],
+	"class_weight": ["balanced"]
 }
 
-configuration_gradient = {
-	"n_estimators": 100,
-	"learning_rate": 0.1,
-	"random_state": 0
+param_gb = {
+	"n_estimators": [50, 75, 125, 200],
+	"learning_rate": [0.01, 0.1, 0.2],
+	"max_depth": [3, 5]
 }
 
-def train_model(X_train=None, y_train=None, model_class=None, model_name="", random_state=42):
-	_print_msg(msg="Training model "+model_name)
-
-	if (X_train is None) or (y_train is None):
-		raise Exception("[train_model] Provide X_train and y_train values")
-
-	if model_class is None:
-		raise Exception("[train_model] Provide model")
-	
-	_print_msg(msg="With configuration: ")
+def _train_model(X_train=None, y_train=None, model_class=None, model_name=""):
 
 	if model_class == LogisticRegression:
-		configuration_logistic["random_state"] = random_state
-		_print_msg(msg=str(configuration_logistic))
-		model = model_class(**configuration_logistic)
-
+		grid = RandomizedSearchCV(model_class(), param_distributions=param_lr, n_iter=20, cv=5, scoring='accuracy', random_state=42)
 	elif model_class == RandomForestClassifier:
-		configuration_forest["random_state"] = random_state
-		_print_msg(msg=str(configuration_forest))
-		model = model_class(**configuration_forest)
-
+		grid = RandomizedSearchCV(model_class(), param_distributions=param_rf, n_iter=15, cv=5, scoring='accuracy', random_state=42)
 	elif model_class == GradientBoostingClassifier:
-		configuration_gradient["random_state"] = random_state
-		_print_msg(msg=str(configuration_gradient))
-		model = model_class(**configuration_gradient)
+		grid = RandomizedSearchCV(model_class(), param_distributions=param_gb, n_iter=15, cv=5, scoring='accuracy', random_state=42)
 
 	else:
-		raise Exception("[train_model] Please provide correct model")
+		raise Exception("Please provide correct sklearn model")
 	
-	_print_msg(msg="Configuration done")
-	_print_msg(msg="Training model...")
+	grid.fit(X_train, y_train)
 
-	model = model.fit(X_train, y_train)
+	return grid.best_params_
 
-	_print_msg(msg="Done training model "+model_name, nl=True, sep=True)
+def train_model(X_train=None, y_train=None, model_class=None, model_name=""):
+
+	_print_msg(msg="Training model "+model_name)
+
+	best_param = _train_model(X_train=X_train, y_train=y_train, model_class=model_class, model_name=model_name)
+	model = model_class(**best_param)
+
+	model.fit(X_train, y_train)
 
 	return model
