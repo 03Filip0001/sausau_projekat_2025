@@ -51,6 +51,8 @@ def train_model(X_train=None, y_train=None, model_class=DEFAULT_MODEL_CLASS, mod
 		for name, importance in zip(feature_names, importances):
 			_print_msg(msg=f"     {name}: {importance:.5f}")
 
+	_print_msg(msg="", nl=True, sep=True)
+
 	return model, model_name
 	
 

@@ -22,7 +22,7 @@ def load_data(fName=None):
 	if not fName:
 		raise Exception("Provide data file name")
 	
-	_print_msg(msg="Trying to read data from file: "+fName+"...")
+	_print_msg(msg="Trying to read data from file: \""+fName+"\"...")
 	
 	if not os.path.exists(fName):
 		raise Exception("File does not exist")	
@@ -84,7 +84,7 @@ def parse_data(data=None):
 			_print_dropping_column(col=col)
 			columns_drop.append(col)
 		elif missing_rows:
-			_print_column(msg="Filling empty rows in column", col=col)
+			_print_column(msg="Filling empty rows in column ", col=col)
 			fill_data(data=data, col=col, str_col=string_columns)
 			
 	columns_drop = list(set(columns_drop))

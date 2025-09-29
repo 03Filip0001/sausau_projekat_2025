@@ -20,7 +20,7 @@ if len(sys.argv) > 1:
 	argv = sys.argv[1]
 	_TRAINING_MODELS = True
 	_print_msg(msg="ENTERING TRAINING MODELS FUNCTION", nl=True, sep=True)
-	
+
 else:
 	_TRAINING_MODELS = False
 	_print_msg(msg="ENTERING MODEL EVALUATION FUNCTION", nl=True, sep=True)
@@ -46,14 +46,14 @@ if _TRAINING_MODELS:
 		y_pred = model.predict(X_test)
 		evaluate(model_name=name, y_pred=y_pred, y_test=y_test, labels=["No Churn", "Churn"])
 
-	_print_msg(msg="Saving model params to file "+DEFAULT_PARAMS_PATH+"...")
+	_print_msg(msg="Saving model params to file \""+DEFAULT_PARAMS_PATH+"\"...")
 	with open(DEFAULT_PARAMS_PATH, "w") as f:
 		json.dump(models_param, f)
 
 	_print_msg(msg="Done saving params.", nl=True, sep=True)
 
 else:
-	_print_msg(msg="Loading model params from file "+DEFAULT_PARAMS_PATH+"...")
+	_print_msg(msg="Loading model params from file \""+DEFAULT_PARAMS_PATH+"\"...")
 	if os.path.exists(DEFAULT_PARAMS_PATH):
 		with open(DEFAULT_PARAMS_PATH, "r") as f:
 			models_param = json.load(f)
