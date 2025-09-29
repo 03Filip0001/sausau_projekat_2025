@@ -14,4 +14,4 @@ def split_data(data=None, train_size=None, test_size=None, random_state=42):
 	X, y = data.drop("Churn", axis=1), data["Churn"]
 	X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=train_size, stratify=y, random_state=random_state)
 
-	return X_train, X_test, y_train, y_test
+	return X_train, X_test, y_train, y_test, X.columns.tolist()
