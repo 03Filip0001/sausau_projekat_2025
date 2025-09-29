@@ -27,11 +27,11 @@ param_gb = {
 def _train_model(X_train=None, y_train=None, model_class=None, model_name=""):
 
 	if model_class == LogisticRegression:
-		grid = RandomizedSearchCV(model_class(), param_distributions=param_lr, n_iter=20, cv=5, scoring='accuracy', random_state=42)
+		grid = RandomizedSearchCV(model_class(), param_distributions=param_lr, n_iter=20, cv=5, scoring='f1', random_state=42)
 	elif model_class == RandomForestClassifier:
-		grid = RandomizedSearchCV(model_class(), param_distributions=param_rf, n_iter=15, cv=5, scoring='accuracy', random_state=42)
+		grid = RandomizedSearchCV(model_class(), param_distributions=param_rf, n_iter=15, cv=5, scoring='f1', random_state=42)
 	elif model_class == GradientBoostingClassifier:
-		grid = RandomizedSearchCV(model_class(), param_distributions=param_gb, n_iter=15, cv=5, scoring='accuracy', random_state=42)
+		grid = RandomizedSearchCV(model_class(), param_distributions=param_gb, n_iter=15, cv=5, scoring='f1', random_state=42)
 
 	else:
 		raise Exception("Please provide correct sklearn model")
@@ -40,13 +40,19 @@ def _train_model(X_train=None, y_train=None, model_class=None, model_name=""):
 
 	return grid.best_params_
 
-def train_model(X_train=None, y_train=None, model_class=None, model_name=""):
+def train_model(X_train=None, y_train=None, model_class=GradientBoostingClassifier, model_name="Gradient Boosting", models_params=None):
+	
+	params = models_params[model_name]
+	model = model_class(**params)
 
-	_print_msg(msg="Training model "+model_name)
+	return model.fit(X_train, y_train)
+	
 
+def find_best_params(X_train=None, y_train=None, model_class=None, model_name=""):
+	_print_msg(msg="Finding params for model "+model_name)
 	best_param = _train_model(X_train=X_train, y_train=y_train, model_class=model_class, model_name=model_name)
-	model = model_class(**best_param)
 
-	model.fit(X_train, y_train)
+	_print_msg(msg="Best params for model: ")
+	print(best_param)
 
-	return model
+	return best_param
